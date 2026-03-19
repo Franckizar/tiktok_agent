@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base RGB variables for gradients and overrides */
+:root {
+  --foreground-rgb: 33, 33, 33;
+  --background-start-rgb: 245, 245, 250;
+  --background-end-rgb: 255, 255, 255;
+}
+
+/* Dark mode RGB adjustments */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 245, 245, 245;
+    --background-start-rgb: 20, 20, 30;
+    --background-end-rgb: 10, 10, 15;
+  }
+}
+
+/* Sky Blue Theme Palette */
+@layer base {
+  :root {
+    --background: 0 0% 98%;             /* Off-White */
+    --foreground: 210 30% 20%;          /* Deep Blue-Gray */
+    --card: 0 0% 100%;                  /* White Cards */
+    --card-foreground: 210 25% 25%;     /* Slightly lighter blue */
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 50% 35%;  /* Ocean Blue */
+    --primary: 200 90% 50%;             /* Sky Blue */
+    --primary-foreground: 0 0% 100%;    /* White text */
+    --secondary: 190 60% 70%;           /* Light Cyan */
+    --secondary-foreground: 200 80% 40%;/* Deep Sky Blue */
+    --muted: 200 20% 90%;               /* Soft Blue-White */
+    --muted-foreground: 190 50% 60%;    /* Muted Cyan */
+    --accent: 195 90% 55%;              /* Bright Sky Blue */
+    --accent-foreground: 0 0% 100%;     /* White */
+    --destructive: 0 75% 55%;           /* Red */
+    --destructive-foreground: 0 0% 100%;/* White */
+    --border: 200 25% 85%;              /* Soft Blue-Gray */
+    --input: 200 25% 85%;
+    --ring: 200 90% 50%;                /* Sky Blue Ring */
+    --chart-1: 200 90% 50%;             /* Sky Blue */
+    --chart-2: 190 60% 70%;             /* Light Cyan */
+    --chart-3: 195 90% 55%;             /* Bright Sky */
+    --chart-4: 200 20% 90%;             /* Light Blue-White */
+    --chart-5: 210 30% 20%;             /* Deep Blue */
+    --radius: 0.5rem;
+  }
+
+  /* Dark mode overrides */
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 210 20% 95%;
+    --card: 0 0% 15%;
+    --card-foreground: 210 20% 95%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 200 50% 80%;
+    --primary: 200 90% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 190 60% 50%;
+    --secondary-foreground: 200 80% 80%;
+    --muted: 200 20% 20%;
+    --muted-foreground: 190 50% 70%;
+    --accent: 195 90% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 200 25% 35%;
+    --input: 200 25% 35%;
+    --ring: 200 90% 50%;
+    --chart-1: 200 90% 45%;
+    --chart-2: 190 60% 50%;
+    --chart-3: 195 90% 50%;
+    --chart-4: 200 20% 20%;
+    --chart-5: 210 20% 95%;
+  }
+}
+
+/* Apply default Tailwind utilities */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  .group {
+    position: relative;
+  }
+
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: gradient 6s ease infinite;
+  }
+}
+
+/* // app/globals.css (add at the bottom) */
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+
+/* Add to your global.css or stylesheet */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
