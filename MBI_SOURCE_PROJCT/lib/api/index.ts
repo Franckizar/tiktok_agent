@@ -2,7 +2,6 @@ import axios, { InternalAxiosRequestConfig } from 'axios'
 import logger from '../utils/logger'
 import { handleApiError } from '../utils/errors'
 
-// ✅ Refresh lock - prevents parallel refresh calls
 let isRefreshing = false
 let refreshQueue: Array<() => void> = []
 
@@ -11,6 +10,7 @@ export const api = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true', // ← ADD THIS
   },
 })
 
@@ -44,11 +44,9 @@ api.interceptors.response.use(
 
     logger.api(`← ${status} ${originalRequest?.url}`)
 
-    // ✅ Handle 401 - try refresh with lock
     if (status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true
 
-      // If already refreshing, queue this request
       if (isRefreshing) {
         return new Promise((resolve) => {
           refreshQueue.push(() => resolve(api(originalRequest)))
@@ -61,11 +59,8 @@ api.interceptors.response.use(
         logger.auth('Access token expired - attempting refresh')
         await api.post('/v1/auth/refresh')
         logger.success('Token refreshed - retrying request')
-
-        // Release all queued requests
         refreshQueue.forEach(cb => cb())
         refreshQueue = []
-
         return api(originalRequest)
       } catch (refreshError) {
         refreshQueue = []
@@ -77,13 +72,11 @@ api.interceptors.response.use(
       }
     }
 
-    // ✅ Handle 403
     if (status === 403) {
       logger.warn('Access forbidden', { url: originalRequest?.url })
       window.location.href = '/unauthorized'
     }
 
-    // ✅ Handle network errors
     if (!error.response) {
       logger.error('Network error - backend unreachable')
     }
