@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/button'
 import { authApi } from '@/lib/api/auth'
 import { useAuthStore, getDashboardPath } from '@/lib/store/auth'
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth'
-// import { authApi } from '@/lib/api/auth'
 
 export default function LoginPage() {
   const router = useRouter()
   const { checkAuth } = useAuthStore()
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isTikTokLoading, setIsTikTokLoading] = useState(false)
 
   const {
     register,
@@ -30,19 +30,13 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     setError('')
-
     try {
       await authApi.login(data)
-
-      // ✅ Fetch fresh user from API to get correct role
       await checkAuth()
-
-      // ✅ Get updated user from store and redirect correctly
       const { user } = useAuthStore.getState()
       if (user) {
         router.replace(getDashboardPath(user))
       }
-
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||
@@ -51,6 +45,18 @@ export default function LoginPage() {
       setError(errorMessage)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleTikTokLogin = async () => {
+    setIsTikTokLoading(true)
+    setError('')
+    try {
+      const response = await authApi.loginWithTikTok()
+      window.location.href = response.data.authUrl
+    } catch (err: any) {
+      setError('Failed to initiate TikTok login. Please try again.')
+      setIsTikTokLoading(false)
     }
   }
 
@@ -105,22 +111,31 @@ export default function LoginPage() {
             <p className="text-gray-400 text-xs">Enter the arena and continue your journey</p>
           </div>
 
-          {/* Social Icons */}
-          <div className="flex justify-center gap-2 mb-4">
-            {[
-              { name: 'facebook', icon: 'facebook' },
-              { name: 'google', icon: 'google' },
-              { name: 'discord', icon: 'discord' }
-            ].map((social) => (
-              <button
-                key={social.name}
-                className="relative group w-9 h-9 rounded-full bg-[#1a1a24] border border-[#ff6b35]/20 flex items-center justify-center transition-all hover:border-[#ff6b35] hover:scale-110"
-              >
-                <div className="absolute inset-0 rounded-full bg-[#ff6b35] opacity-0 group-hover:opacity-20 blur-md transition-opacity"></div>
-                <img src={`/icons/${social.icon}.svg`} alt={social.name} className="w-4 h-4 opacity-70 group-hover:opacity-100" />
-              </button>
-            ))}
-          </div>
+          {/* Error */}
+          {error && (
+            <Alert variant="destructive" className="mb-4 bg-red-500/10 border-red-500/30 text-red-200">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-sm">{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* TikTok Login Button */}
+          <button
+            type="button"
+            onClick={handleTikTokLogin}
+            disabled={isTikTokLoading || isLoading}
+            className="relative w-full group py-2.5 bg-[#1a1a24] border border-[#ff6b35]/20 rounded-xl text-white text-sm font-bold flex items-center justify-center gap-2 hover:border-[#ff6b35] transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="absolute inset-0 rounded-xl bg-[#ff6b35] opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            {isTikTokLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/>
+              </svg>
+            )}
+            {isTikTokLoading ? 'Connecting to TikTok...' : 'Continue with TikTok'}
+          </button>
 
           {/* Divider */}
           <div className="relative mb-4">
@@ -131,14 +146,6 @@ export default function LoginPage() {
               <span className="px-3 bg-[#0a0a0f]/80 text-gray-400">or login with email</span>
             </div>
           </div>
-
-          {/* Error */}
-          {error && (
-            <Alert variant="destructive" className="mb-4 bg-red-500/10 border-red-500/30 text-red-200">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="text-sm">{error}</AlertDescription>
-            </Alert>
-          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
@@ -179,7 +186,7 @@ export default function LoginPage() {
             {/* Submit */}
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isTikTokLoading}
               className="relative w-full py-2.5 mt-2 bg-gradient-to-r from-[#ff6b35] to-[#ff0000] text-white font-bold rounded-xl overflow-hidden group text-sm"
             >
               <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></span>
