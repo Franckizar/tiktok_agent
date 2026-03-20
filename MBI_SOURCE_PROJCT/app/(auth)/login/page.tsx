@@ -48,17 +48,26 @@ export default function LoginPage() {
     }
   }
 
-  const handleTikTokLogin = async () => {
-    setIsTikTokLoading(true)
-    setError('')
-    try {
-      const response = await authApi.loginWithTikTok()
-      window.location.href = response.data.authUrl
-    } catch (err: any) {
-      setError('Failed to initiate TikTok login. Please try again.')
-      setIsTikTokLoading(false)
+const handleTikTokLogin = async () => {
+  setIsTikTokLoading(true)
+  setError('')
+  try {
+    const response = await authApi.loginWithTikTok()
+    console.log('Full response:', response)
+    console.log('Response data:', response.data)
+    console.log('Auth URL:', response.data?.authUrl)
+
+    const authUrl = response.data?.authUrl
+    if (!authUrl) {
+      throw new Error(`No authUrl in response: ${JSON.stringify(response.data)}`)
     }
+    window.location.href = authUrl
+  } catch (err: any) {
+    console.error('TikTok error:', err)
+    setError(err.message || 'Failed to initiate TikTok login.')
+    setIsTikTokLoading(false)
   }
+}
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-[#0a0a0f]">

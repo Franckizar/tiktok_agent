@@ -23,7 +23,7 @@ public class SecurityConfig {
         private final AuthenticationProvider authenticationProvider;
 
         public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
-                              AuthenticationProvider authenticationProvider) {
+                        AuthenticationProvider authenticationProvider) {
                 this.jwtAuthFilter = jwtAuthFilter;
                 this.authenticationProvider = authenticationProvider;
         }
@@ -31,78 +31,78 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 return http
-                        // CORS Configuration
-                        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                // CORS Configuration
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                        // Disable CSRF (using JWT)
-                        .csrf(AbstractHttpConfigurer::disable)
+                                // Disable CSRF (using JWT)
+                                .csrf(AbstractHttpConfigurer::disable)
 
-                        // ========================================
-                        // SECURITY HEADERS (HSTS)
-                        // ========================================
-                        .headers(headers -> headers
-                                // Force HTTPS for 1 year
-                                .httpStrictTransportSecurity(hsts -> hsts
-                                        .maxAgeInSeconds(31536000)
-                                        .includeSubDomains(true))
-                                // Prevent clickjacking
-                                .frameOptions(frame -> frame.deny())
-                                // Prevent MIME sniffing
-                                .contentTypeOptions(Customizer.withDefaults()))
+                                // ========================================
+                                // SECURITY HEADERS (HSTS)
+                                // ========================================
+                                .headers(headers -> headers
+                                                // Force HTTPS for 1 year
+                                                .httpStrictTransportSecurity(hsts -> hsts
+                                                                .maxAgeInSeconds(31536000)
+                                                                .includeSubDomains(true))
+                                                // Prevent clickjacking
+                                                .frameOptions(frame -> frame.deny())
+                                                // Prevent MIME sniffing
+                                                .contentTypeOptions(Customizer.withDefaults()))
 
-                        // ========================================
-                        // AUTHORIZATION RULES
-                        // ========================================
-                        .authorizeHttpRequests(auth -> auth
+                                // ========================================
+                                // AUTHORIZATION RULES
+                                // ========================================
+                                .authorizeHttpRequests(auth -> auth
 
-                                // ✅ Public endpoints - no authentication required
-                                .requestMatchers(
-                                        "/api/v1/auth/**",
-                                        "/api/test/**",
-                                        "/api/v1/cache-test/**",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/swagger-ui.html",
-                                        "/actuator/**",
-                                        "/uploads/**",
-                                        "/error")
-                                .permitAll()
+                                                // ✅ Public endpoints - no authentication required
+                                                .requestMatchers(
+                                                                "/api/v1/auth/**",
+                                                                "/api/test/**",
+                                                                "/api/v1/cache-test/**",
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-ui.html",
+                                                                "/actuator/**",
+                                                                "/uploads/**",
+                                                                "/error")
+                                                .permitAll()
 
-                                // ✅ SuperAdmin-only endpoints
-                                .requestMatchers("/api/v1/superadmin/**")
-                                .hasAuthority("SUPERADMIN")
+                                                // ✅ SuperAdmin-only endpoints
+                                                .requestMatchers("/api/v1/superadmin/**")
+                                                .hasAuthority("SUPERADMIN")
 
-                                // ✅ Admin endpoints - SUPERADMIN and ADMIN
-                                .requestMatchers("/api/v1/admin/**")
-                                .hasAnyAuthority("SUPERADMIN", "ADMIN")
+                                                // ✅ Admin endpoints - SUPERADMIN and ADMIN
+                                                .requestMatchers("/api/v1/admin/**")
+                                                .hasAnyAuthority("SUPERADMIN", "ADMIN")
 
-                                // ✅ Shared endpoints - SUPERADMIN, ADMIN, and PLAYER
-                                .requestMatchers("/api/v1/shared/**")
-                                .hasAnyAuthority("SUPERADMIN", "ADMIN", "PLAYER")
+                                                // ✅ Shared endpoints - SUPERADMIN, ADMIN, and PLAYER
+                                                .requestMatchers("/api/v1/shared/**")
+                                                .hasAnyAuthority("SUPERADMIN", "ADMIN", "PLAYER")
 
-                                // ✅ Player-only endpoints
-                                .requestMatchers("/api/v1/player/**")
-                                .hasAuthority("PLAYER")
+                                                // ✅ Player-only endpoints
+                                                .requestMatchers("/api/v1/player/**")
+                                                .hasAuthority("PLAYER")
 
-                                // All other requests need authentication
-                                .anyRequest().authenticated())
+                                                // All other requests need authentication
+                                                .anyRequest().authenticated())
 
-                        // Stateless sessions (JWT)
-                        .sessionManagement(sess -> sess
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                // Stateless sessions (JWT)
+                                .sessionManagement(sess -> sess
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                        // Authentication provider and JWT filter
-                        .authenticationProvider(authenticationProvider)
-                        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                                // Authentication provider and JWT filter
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
-                        // Exception handling
-                        .exceptionHandling(exception -> exception
-                                .accessDeniedHandler((request, response, ex) -> {
-                                        response.sendError(403,
-                                                "Access Denied: " + ex.getMessage());
-                                }))
+                                // Exception handling
+                                .exceptionHandling(exception -> exception
+                                                .accessDeniedHandler((request, response, ex) -> {
+                                                        response.sendError(403,
+                                                                        "Access Denied: " + ex.getMessage());
+                                                }))
 
-                        .build();
+                                .build();
         }
 
         @Bean
@@ -114,8 +114,8 @@ public class SecurityConfig {
                                 "http://localhost:8088",
                                 "https://tiktok-auto-upload.vercel.app",
                                 "https://modest-integral-ibex.ngrok-free.app",
-                                "https://tiktok-agent-one.vercel.app"
-                        
+                                "https://tiktok-agent-one.vercel.app",
+                                "https://tiktok-agent-ocmwogt41-francks-projects-35065eee.vercel.app"                        
                 ));
 
                 configuration.setAllowedMethods(Arrays.asList(
