@@ -482,3 +482,8 @@
 2026-03-20 14:06:16 [main] DEBUG o.s.d.redis.listener.RedisMessageListenerContainer - Starting RedisMessageListenerContainer...
 2026-03-20 14:06:16 [main] DEBUG o.s.d.redis.listener.RedisMessageListenerContainer - Postpone listening for Redis messages until actual listeners are added
 2026-03-20 14:06:16 [main] INFO  com.example.security.SecurityApplication - Started SecurityApplication in 18.014 seconds (process running for 19.184)
+2026-03-20 14:11:45 [main] INFO  com.example.security.SecurityApplication - Starting SecurityApplication using Java 17.0.18 with PID 19956 (J:\ALL OF VIDEO EDITING\code\Tiktok_ai_agent\tiktok_agent\target\classes started by takam in J:\ALL OF VIDEO EDITING\code\Tiktok_ai_agent\tiktok_agent)
+2026-03-20 14:11:45 [main] DEBUG com.example.security.SecurityApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2026-03-20 14:11:45 [main] INFO  com.example.security.SecurityApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-20 14:11:48 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-20 14:11:48 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
