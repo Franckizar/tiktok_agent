@@ -1,9 +1,7 @@
 package com.example.security.Users;
 
-import com.example.security.Schema.Notification.Notification;
 import com.example.security.Users.Player.Player;
 import com.example.security.Users.SuperAdmin.SuperAdmin;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -56,8 +54,42 @@ public class User implements UserDetails {
     private LocalDateTime subscriptionExpiresAt;
 
     // ========================================
+    // TIKTOK OAUTH FIELDS
+    // ========================================
+
+    @Column(name = "tiktok_id", unique = true)
+    private String tiktokId;
+
+    @Column(name = "tiktok_access_token", length = 1000)
+    private String tiktokAccessToken;
+
+    @Column(name = "tiktok_refresh_token", length = 1000)
+    private String tiktokRefreshToken;
+
+    @Column(name = "tiktok_token_expiry")
+    private LocalDateTime tiktokTokenExpiry;
+
+    @Builder.Default
+    @Column(name = "tiktok_connected")
+    private boolean tiktokConnected = false;
+
+    // ========================================
+    // TIKTOK PROFILE FIELDS
+    // ========================================
+
+    @Column(name = "tiktok_display_name")
+    private String displayName;
+
+    @Column(name = "tiktok_avatar_url", length = 1000)
+    private String avatarUrl;
+
+    @Column(name = "tiktok_union_id")
+    private String unionId;
+
+    // ========================================
     // ROLES
     // ========================================
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -69,20 +101,13 @@ public class User implements UserDetails {
     // RELATIONS
     // ========================================
 
-    // One-to-One: User has one Player profile
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private Player playerProfile;
 
-    // One-to-One: User has one SuperAdmin profile
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private SuperAdmin superAdminProfile;
-
-    // One-to-Many: User receives many notifications
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Notification> notifications = new ArrayList<>();
 
     // ========================================
     // HELPER METHODS

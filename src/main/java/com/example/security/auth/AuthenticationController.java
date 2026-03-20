@@ -1,27 +1,31 @@
 package com.example.security.auth;
 
+import com.example.security.UserRepository;
 import com.example.security.Users.Role;
+import com.example.security.Users.User;
 import com.example.security.auth.Authentication.AuthenticationService;
+import com.example.security.auth.Authentication.TikTokService;
 import com.example.security.config.EmailVerificationService;
+import com.example.security.config.JwtService;
 import com.example.security.dto.emailverification.ResendVerificationRequest;
 import com.example.security.dto.emailverification.VerificationRequest;
 import com.example.security.dto.request.AuthenticationRequest;
 import com.example.security.dto.request.RegisterRequest;
 import com.example.security.dto.response.AuthenticationResponse;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -32,11 +36,15 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final EmailVerificationService emailVerificationService;
+    private final TikTokService tiktokService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+
+    @Value("${frontend.url:http://localhost:3000}")
+    private String frontendUrl;
 
     // ========================================
     // REGISTRATION
-    // Public endpoint - creates UNREG user, sends verification email
-    // First user ever becomes SUPERADMIN automatically
     // ========================================
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -82,7 +90,6 @@ public class AuthenticationController {
 
     // ========================================
     // TEST LOGIN - DEV ONLY ⚠️ REMOVE IN PRODUCTION
-    // Returns tokens in response body instead of cookies
     // ========================================
     @PostMapping("/authenticate/test")
     public ResponseEntity<Map<String, Object>> authenticateTest(
@@ -111,51 +118,50 @@ public class AuthenticationController {
 
     // ========================================
     // REFRESH TOKEN
-    // Reads from cookie or Authorization header
     // ========================================
-  @PostMapping("/refresh")
-public ResponseEntity<AuthenticationResponse> refreshToken(
-        @CookieValue(name = "refreshToken", required = false) String cookieRefreshToken,
-        @RequestHeader(value = "Authorization", required = false) String authHeader,
-        HttpServletRequest request, // ✅ added
-        HttpServletResponse response) {
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refreshToken(
+            @CookieValue(name = "refreshToken", required = false) String cookieRefreshToken,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
-    log.info("=== REFRESH TOKEN REQUEST ===");
+        log.info("=== REFRESH TOKEN REQUEST ===");
 
-    // ✅ Debug: log all cookies received
-    log.info("=== COOKIES RECEIVED ===");
-    if (request.getCookies() != null) {
-        for (jakarta.servlet.http.Cookie c : request.getCookies()) {
-            log.info("Cookie found: {} = {}...", c.getName(), 
-                c.getValue().substring(0, Math.min(10, c.getValue().length())));
+        log.info("=== COOKIES RECEIVED ===");
+        if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie c : request.getCookies()) {
+                log.info("Cookie found: {} = {}...", c.getName(),
+                        c.getValue().substring(0, Math.min(10, c.getValue().length())));
+            }
+        } else {
+            log.warn("NO COOKIES RECEIVED AT ALL");
         }
-    } else {
-        log.warn("NO COOKIES RECEIVED AT ALL");
+        log.info("cookieRefreshToken present: {}", cookieRefreshToken != null);
+
+        try {
+            String refreshTokenValue = null;
+
+            if (cookieRefreshToken != null && !cookieRefreshToken.trim().isEmpty()) {
+                refreshTokenValue = cookieRefreshToken.trim();
+            } else if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                refreshTokenValue = authHeader.substring(7).trim();
+            }
+
+            if (refreshTokenValue == null || refreshTokenValue.isEmpty()) {
+                throw new IllegalArgumentException("Refresh token is required");
+            }
+
+            AuthenticationResponse authResponse = authenticationService.refreshToken(refreshTokenValue, response);
+            log.info("=== REFRESH TOKEN COMPLETE ===");
+            return ResponseEntity.ok(authResponse);
+
+        } catch (Exception e) {
+            log.error("Token refresh failed: {}", e.getMessage());
+            throw e;
+        }
     }
-    log.info("cookieRefreshToken present: {}", cookieRefreshToken != null);
 
-    try {
-        String refreshTokenValue = null;
-
-        if (cookieRefreshToken != null && !cookieRefreshToken.trim().isEmpty()) {
-            refreshTokenValue = cookieRefreshToken.trim();
-        } else if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            refreshTokenValue = authHeader.substring(7).trim();
-        }
-
-        if (refreshTokenValue == null || refreshTokenValue.isEmpty()) {
-            throw new IllegalArgumentException("Refresh token is required");
-        }
-
-        AuthenticationResponse authResponse = authenticationService.refreshToken(refreshTokenValue, response);
-        log.info("=== REFRESH TOKEN COMPLETE ===");
-        return ResponseEntity.ok(authResponse);
-
-    } catch (Exception e) {
-        log.error("Token refresh failed: {}", e.getMessage());
-        throw e;
-    }
-}
     // ========================================
     // LOGOUT
     // ========================================
@@ -222,8 +228,7 @@ public ResponseEntity<AuthenticationResponse> refreshToken(
     }
 
     // ========================================
-    // APPROVE USER - Called by Admin or SuperAdmin
-    // Assigns PLAYER or ADMIN role and creates appropriate profile
+    // APPROVE USER
     // ========================================
     @PostMapping("/admin/approve/{userId}/{role}")
     public ResponseEntity<String> approveUser(
@@ -308,6 +313,93 @@ public ResponseEntity<AuthenticationResponse> refreshToken(
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Failed to resend code. Please try again.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // ========================================
+    // TIKTOK - INIT
+    // ========================================
+    @GetMapping("/tiktok/init")
+    public ResponseEntity<Map<String, String>> initTikTokAuth() {
+        log.info("=== TIKTOK AUTH INIT ===");
+        try {
+            String authUrl = tiktokService.getTikTokAuthUrl();
+            Map<String, String> response = new HashMap<>();
+            response.put("authUrl", authUrl);
+            response.put("state", "pkce-protected");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Failed to init TikTok auth", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // ========================================
+    // TIKTOK - CALLBACK
+    // ========================================
+    @GetMapping("/tiktok/callback")
+    public void handleTikTokCallback(
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String error,
+            @RequestParam(required = false) String error_description,
+            HttpServletResponse response) throws IOException {
+
+        log.info("=== TIKTOK CALLBACK === code: {}, state: {}, error: {}",
+                code, state, error);
+
+        if (error != null) {
+            log.error("TikTok error: {} - {}", error, error_description);
+            response.sendRedirect(frontendUrl + "?error=" + error_description);
+            return;
+        }
+
+        if (code == null || code.isBlank()) {
+            log.error("Missing code in TikTok callback");
+            response.sendRedirect(frontendUrl + "?error=Missing authorization code");
+            return;
+        }
+
+        try {
+            authenticationService.handleTikTokCallback(code, state, response);
+            response.sendRedirect(frontendUrl + "/callback");
+        } catch (Exception e) {
+            log.error("TikTok callback failed: {}", e.getMessage(), e);
+            response.sendRedirect(frontendUrl + "?error=" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(
+            @CookieValue(name = "accessToken", required = false) String accessToken) {
+
+        log.info("=== GET CURRENT USER ===");
+
+        if (accessToken == null || accessToken.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not authenticated"));
+        }
+
+        try {
+            String email = jwtService.extractUsername(accessToken);
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", user.getId());
+            response.put("email", user.getEmail());
+            response.put("firstname", user.getFirstname());
+            response.put("displayName", user.getDisplayName());
+            response.put("avatarUrl", user.getAvatarUrl());
+            response.put("tiktokId", user.getTiktokId());
+            response.put("tiktokConnected", user.isTiktokConnected());
+            response.put("role", user.getDefaultRole().name());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Failed to get current user: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid session"));
         }
     }
 }

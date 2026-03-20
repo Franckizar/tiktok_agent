@@ -1,11 +1,11 @@
 package com.example.security.Users.Player;
 
-import com.example.security.Schema.Dispute.Dispute;
+// import com.example.security.Schema.Dispute.Dispute;
 
-import com.example.security.Schema.PlayerGameRanking.PlayerGameRanking;
-import com.example.security.Schema.SeasonOverallRanking.SeasonOverallRanking;
-import com.example.security.Schema.TournamentRegistration.TournamentRegistration;
-import com.example.security.Schema.Wallet.Wallet;
+// import com.example.security.Schema.PlayerGameRanking.PlayerGameRanking;
+// import com.example.security.Schema.SeasonOverallRanking.SeasonOverallRanking;
+// import com.example.security.Schema.TournamentRegistration.TournamentRegistration;
+// import com.example.security.Schema.Wallet.Wallet;
 import com.example.security.Users.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -112,26 +112,26 @@ public class Player {
     // ========================================
 
     // One-to-One: Each player has one wallet
-    @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Wallet wallet;
+    // @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private Wallet wallet;
 
-    // One-to-Many: A player registers for many tournaments
-    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<TournamentRegistration> registrations = new ArrayList<>();
+    // // One-to-Many: A player registers for many tournaments
+    // @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    // @Builder.Default
+    // private List<TournamentRegistration> registrations = new ArrayList<>();
 
-    // One-to-Many: A player has rankings per game per season
-    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<PlayerGameRanking> gameRankings = new ArrayList<>();
+    // // One-to-Many: A player has rankings per game per season
+    // @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    // @Builder.Default
+    // private List<PlayerGameRanking> gameRankings = new ArrayList<>();
 
-    // One-to-Many: A player has one overall ranking per season
-    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<SeasonOverallRanking> seasonRankings = new ArrayList<>();
+    // // One-to-Many: A player has one overall ranking per season
+    // @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    // @Builder.Default
+    // private List<SeasonOverallRanking> seasonRankings = new ArrayList<>();
 
-    // One-to-Many: A player can raise disputes
-    @OneToMany(mappedBy = "raisedBy", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Dispute> disputes = new ArrayList<>();
+    // // One-to-Many: A player can raise disputes
+    // @OneToMany(mappedBy = "raisedBy", fetch = FetchType.LAZY)
+    // @Builder.Default
+    // private List<Dispute> disputes = new ArrayList<>();
 }

@@ -15,44 +15,40 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
+
     // ========================================
     // BASIC QUERIES
     // ========================================
-    
+
     Optional<User> findByEmail(String email);
 
     long count();
 
     // ========================================
+    // TIKTOK QUERY
+    // ========================================
+
+    Optional<User> findByTiktokId(String tiktokId);
+
+    // ========================================
     // ROLE QUERIES
     // ========================================
-    
+
     @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r = :role")
     long countByRole(@Param("role") Role role);
 
     // ========================================
     // EMAIL SEARCH
     // ========================================
-    
+
     @Query("SELECT u FROM User u WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))")
     List<User> findByEmailContainingIgnoreCase(@Param("email") String email);
 
     // ========================================
-    // STATUS QUERIES (✅ UPDATED - Added both methods)
+    // STATUS QUERIES
     // ========================================
-    
-    /**
-     * Find all users with specific status (with pagination)
-     * Used for: Admin panel to view pending/unverified users
-     * Example: getPendingUsers(page, size) in AuthenticationService
-     */
+
     Page<User> findByStatus(UserStatus status, Pageable pageable);
-    
-    /**
-     * Find all users with specific status (without pagination)
-     * Used for: Cleanup tasks, counting users, bulk operations
-     * Example: cleanupUnverifiedUsers() in EmailVerificationService
-     */
+
     List<User> findByStatus(UserStatus status);
 }

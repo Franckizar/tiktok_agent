@@ -67,11 +67,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
-    private final PlayerService playerService;           // ← replaces User1Service
-    private final SuperAdminService superAdminService;  // ← new
+    private final PlayerService playerService; // ← replaces User1Service
+    private final SuperAdminService superAdminService; // ← new
     private final UserMapper userMapper;
     private final EmailVerificationService emailVerificationService;
     private final FileStorageService fileStorageService;
+    private final TikTokService tiktokService;
 
     @Value("${frontend.url:http://localhost:3000}")
     private String frontendUrl;
@@ -352,22 +353,22 @@ public class AuthenticationService {
         log.info("✅ Logout successful for: {}", email);
     }
 
-public void clearAuthCookies(HttpServletResponse response) {
+    public void clearAuthCookies(HttpServletResponse response) {
     ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
-        .httpOnly(true)
-        .secure(false)
-        .path("/")
-        .maxAge(0)
-        .sameSite("Lax")
-        .build();
+            .httpOnly(true)
+            .secure(true)        // ← changed
+            .path("/")
+            .maxAge(0)
+            .sameSite("None")    // ← changed
+            .build();
 
     ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
-        .httpOnly(true)
-        .secure(false)
-        .path("/")
-        .maxAge(0)
-        .sameSite("Lax")
-        .build();
+            .httpOnly(true)
+            .secure(true)        // ← changed
+            .path("/")
+            .maxAge(0)
+            .sameSite("None")    // ← changed
+            .build();
 
     response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
     response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
@@ -499,26 +500,25 @@ public void clearAuthCookies(HttpServletResponse response) {
     // ========================================
     // COOKIE HELPERS
     // ========================================
-   private void setAuthCookies(HttpServletResponse response, TokenPair tokenPair) {
+private void setAuthCookies(HttpServletResponse response, TokenPair tokenPair) {
     ResponseCookie accessCookie = ResponseCookie.from("accessToken", tokenPair.getAccessToken())
-        .httpOnly(true)
-        .secure(false)
-        .path("/")
-        .maxAge(900) // 15 minutes
-        .sameSite("Lax")
-        .build();
+            .httpOnly(true)
+            .secure(true)        // ← changed
+            .path("/")
+            .maxAge(900)
+            .sameSite("None")    // ← changed
+            .build();
 
     ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", tokenPair.getRefreshToken())
-        .httpOnly(true)
-        .secure(false)
-        .path("/")
-        .maxAge(7 * 24 * 60 * 60) // 7 days
-        .sameSite("Lax")
-        .build();
+            .httpOnly(true)
+            .secure(true)        // ← changed
+            .path("/")
+            .maxAge(7 * 24 * 60 * 60)
+            .sameSite("None")    // ← changed
+            .build();
 
     response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
     response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-
     log.debug("Auth cookies set");
 }
 
@@ -597,4 +597,40 @@ public void clearAuthCookies(HttpServletResponse response) {
 
         return result;
     }
+
+    // ========================================
+    // TIKTOK CALLBACK HANDLER
+    // Called by controller after TikTok redirects back
+    // Creates or updates user, sets cookies like normal login
+    // ========================================
+    @Transactional
+public void handleTikTokCallback(String code, String state, HttpServletResponse response) {
+    log.info("=== TIKTOK CALLBACK HANDLER ===");
+
+    try {
+        // TikTokService handles everything — OAuth + create/update user in DB
+        User user = tiktokService.handleTikTokCallback(code, state);
+
+        // Clean old refresh tokens
+        refreshTokenRepository.deleteByUserId(user.getId());
+
+        // Increment token version
+        user.incrementTokenVersion();
+        userRepository.save(user);
+
+        // Generate token pair
+        TokenPair tokenPair = jwtService.generateTokenPair(user);
+        saveRefreshToken(user, tokenPair.getRefreshToken());
+
+        // Set cookies
+        setAuthCookies(response, tokenPair);
+
+        log.info("✅ TikTok login SUCCESS - UserID: {} | DisplayName: {}",
+                user.getId(), user.getDisplayName());
+
+    } catch (Exception e) {
+        log.error("💥 TikTok callback handling failed: {}", e.getMessage(), e);
+        throw new RuntimeException("TikTok login failed: " + e.getMessage(), e);
+    }
+}
 }

@@ -110,10 +110,10 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000", // Next.js dev
-                        "http://localhost:8088", // Backend
-                        "https://your-production-domain.com" // Update for production
-                        
+                        "http://localhost:3000",
+                                "http://localhost:8088",
+                                "https://tiktok-auto-upload.vercel.app",
+                                "https://modest-integral-ibex.ngrok-free.app"
                         
                 ));
 
