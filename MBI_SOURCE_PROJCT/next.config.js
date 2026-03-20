@@ -2,13 +2,16 @@
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
-const BACKEND_INTERNAL = IS_PRODUCTION
-  ? 'http://backend:8088'
-  : 'http://localhost:8088'
+// When on VPS with Docker — set NEXT_PUBLIC_API_URL=http://backend:8088 in Docker env
+// When on Vercel — falls back to ngrok
+// When local — uses localhost
+const BACKEND_INTERNAL = process.env.NEXT_PUBLIC_API_URL || (IS_PRODUCTION
+  ? 'https://modest-integral-ibex.ngrok-free.app'
+  : 'http://localhost:8088')
 
-const BACKEND_PUBLIC = IS_PRODUCTION
-  ? 'https://modest-integral-ibex.ngrok-free.app'  // ← update this when you have a domain
-  : 'http://localhost:8088'
+const BACKEND_PUBLIC = process.env.NEXT_PUBLIC_MEDIA_URL || (IS_PRODUCTION
+  ? 'https://modest-integral-ibex.ngrok-free.app'
+  : 'http://localhost:8088')
 
 const nextConfig = {
   output: 'standalone',
@@ -26,18 +29,17 @@ const nextConfig = {
   },
 
   env: {
-    NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL || BACKEND_PUBLIC,
-    NEXT_PUBLIC_API_URL:   process.env.NEXT_PUBLIC_API_URL   || BACKEND_INTERNAL,
+    NEXT_PUBLIC_MEDIA_URL: BACKEND_PUBLIC,
+    NEXT_PUBLIC_API_URL:   BACKEND_INTERNAL,
   },
 
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || BACKEND_INTERNAL
-    console.log(`🔗 API routing to: ${backendUrl}`)
+    console.log(`🔗 API routing to: ${BACKEND_INTERNAL}`)
     return [
-      { source: '/api/actuator/:path*',      destination: `${backendUrl}/actuator/:path*` },
-      { source: '/api/v1/superadmin/:path*', destination: `${backendUrl}/api/v1/superadmin/:path*` },
-      { source: '/api/:path*',               destination: `${backendUrl}/api/:path*` },
-      { source: '/uploads/:path*',           destination: `${backendUrl}/uploads/:path*` },
+      { source: '/api/actuator/:path*',      destination: `${BACKEND_INTERNAL}/actuator/:path*` },
+      { source: '/api/v1/superadmin/:path*', destination: `${BACKEND_INTERNAL}/api/v1/superadmin/:path*` },
+      { source: '/api/:path*',               destination: `${BACKEND_INTERNAL}/api/:path*` },
+      { source: '/uploads/:path*',           destination: `${BACKEND_INTERNAL}/uploads/:path*` },
     ]
   },
 
