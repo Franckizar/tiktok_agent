@@ -113,6 +113,7 @@ public class SecurityConfig {
                         "http://localhost:3000",
                                 "http://localhost:8088",
                                 "https://tiktok-auto-upload.vercel.app",
+                                "https://tiktok-auto-upload.ksncjsnjsvercel.app",
                                 "https://modest-integral-ibex.ngrok-free.app",
                                 "https://tiktok-agent-one.vercel.app",
                                 "https://tiktok-agent-ocmwogt41-francks-projects-35065eee.vercel.app"                        
