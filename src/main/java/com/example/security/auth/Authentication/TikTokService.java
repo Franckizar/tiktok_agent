@@ -256,10 +256,11 @@ public class TikTokService {
                 .avatarUrl(avatarUrl)
                 .unionId(unionId)
                 .status(UserStatus.ACTIVE)
-                .defaultRole(Role.UNREG)
+                // .defaultRole(Role.UNREG)
+                .defaultRole(Role.PLAYER)
                 .tokenVersion(0)
                 .build();
-        user.addRole(Role.UNREG);
+        user.addRole(Role.PLAYER);
         log.info("🆕 New TikTok user created: {} | email: {} | avatar: {}",
                 displayName, placeholderEmail, avatarUrl != null ? "✅" : "❌");
     }

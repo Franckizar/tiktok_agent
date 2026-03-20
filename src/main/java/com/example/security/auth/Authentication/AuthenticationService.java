@@ -633,4 +633,17 @@ public void handleTikTokCallback(String code, String state, HttpServletResponse 
         throw new RuntimeException("TikTok login failed: " + e.getMessage(), e);
     }
 }
+@Transactional
+public String[] handleTikTokCallbackGetTokens(String code, String state, HttpServletResponse response) {
+    User user = tiktokService.handleTikTokCallback(code, state);
+
+    refreshTokenRepository.deleteByUserId(user.getId());
+    user.incrementTokenVersion();
+    userRepository.save(user);
+
+    TokenPair tokenPair = jwtService.generateTokenPair(user);
+    saveRefreshToken(user, tokenPair.getRefreshToken());
+
+    return new String[]{tokenPair.getAccessToken(), tokenPair.getRefreshToken()};
+}
 }

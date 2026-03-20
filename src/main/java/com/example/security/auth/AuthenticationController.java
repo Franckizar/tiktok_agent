@@ -336,38 +336,37 @@ public class AuthenticationController {
 
     // ========================================
     // TIKTOK - CALLBACK
-    // ========================================
-    @GetMapping("/tiktok/callback")
-    public void handleTikTokCallback(
-            @RequestParam(required = false) String code,
-            @RequestParam(required = false) String state,
-            @RequestParam(required = false) String error,
-            @RequestParam(required = false) String error_description,
-            HttpServletResponse response) throws IOException {
+@GetMapping("/tiktok/callback")
+public void handleTikTokCallback(
+        @RequestParam(required = false) String code,
+        @RequestParam(required = false) String state,
+        @RequestParam(required = false) String error,
+        @RequestParam(required = false) String error_description,
+        HttpServletResponse response) throws IOException {
 
-        log.info("=== TIKTOK CALLBACK === code: {}, state: {}, error: {}",
-                code, state, error);
+    log.info("=== TIKTOK CALLBACK === code: {}, state: {}, error: {}",
+            code, state, error);
 
-        if (error != null) {
-            log.error("TikTok error: {} - {}", error, error_description);
-            response.sendRedirect(frontendUrl + "?error=" + error_description);
-            return;
-        }
-
-        if (code == null || code.isBlank()) {
-            log.error("Missing code in TikTok callback");
-            response.sendRedirect(frontendUrl + "?error=Missing authorization code");
-            return;
-        }
-
-        try {
-            authenticationService.handleTikTokCallback(code, state, response);
-            response.sendRedirect(frontendUrl + "/callback");
-        } catch (Exception e) {
-            log.error("TikTok callback failed: {}", e.getMessage(), e);
-            response.sendRedirect(frontendUrl + "?error=" + e.getMessage());
-        }
+    if (error != null) {
+        log.error("TikTok error: {} - {}", error, error_description);
+        response.sendRedirect(frontendUrl + "/callback?error=" + error_description);
+        return;
     }
+
+    if (code == null || code.isBlank()) {
+        log.error("Missing code in TikTok callback");
+        response.sendRedirect(frontendUrl + "/callback?error=Missing authorization code");
+        return;
+    }
+
+    try {
+        authenticationService.handleTikTokCallback(code, state, response);
+        response.sendRedirect(frontendUrl + "/callback");
+    } catch (Exception e) {
+        log.error("TikTok callback failed: {}", e.getMessage(), e);
+        response.sendRedirect(frontendUrl + "/callback?error=" + e.getMessage());
+    }
+}
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(
