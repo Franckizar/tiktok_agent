@@ -53,18 +53,19 @@ const handleTikTokLogin = async () => {
   setError('')
   try {
     const response = await authApi.loginWithTikTok()
-    console.log('Full response:', response)
-    console.log('Response data:', response.data)
-    console.log('Auth URL:', response.data?.authUrl)
-
+    
     const authUrl = response.data?.authUrl
+    
     if (!authUrl) {
-      throw new Error(`No authUrl in response: ${JSON.stringify(response.data)}`)
+      setError(`Backend returned: ${JSON.stringify(response.data)}`)
+      setIsTikTokLoading(false)
+      return
     }
+    
     window.location.href = authUrl
   } catch (err: any) {
     console.error('TikTok error:', err)
-    setError(err.message || 'Failed to initiate TikTok login.')
+    setError(err?.response?.data?.message || err.message || 'Failed to initiate TikTok login.')
     setIsTikTokLoading(false)
   }
 }
