@@ -23,15 +23,15 @@ const nextConfig = {
     return [
       {
         source: '/api/actuator/:path*',
-        destination: `${BACKEND_URL}/actuator/:path*`,
+        destination: `${BACKEND_URL}/actuator/:path*`
       },
       {
         source: '/api/:path*',
-        destination: `${BACKEND_URL}/api/:path*`,
+        destination: `${BACKEND_URL}/api/:path*`
       },
       {
         source: '/uploads/:path*',
-        destination: `${BACKEND_URL}/uploads/:path*`,
+        destination: `${BACKEND_URL}/uploads/:path*`
       },
     ]
   },
@@ -40,14 +40,7 @@ const nextConfig = {
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'ngrok-skip-browser-warning', value: 'true' }, // ← ADD THIS
-        ],
-      },
-      {
-        source: '/uploads/:path*',
-        headers: [
-          { key: 'ngrok-skip-browser-warning', value: 'true' }, // ← AND THIS
+          { key: 'Access-Control-Allow-Credentials', value: 'true' }
         ],
       },
     ]
