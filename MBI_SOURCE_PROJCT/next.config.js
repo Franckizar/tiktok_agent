@@ -2,55 +2,39 @@
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
-const BACKEND_INTERNAL = process.env.NEXT_PUBLIC_API_URL || (IS_PRODUCTION
+const BACKEND_URL = IS_PRODUCTION
   ? 'https://modest-integral-ibex.ngrok-free.app'
-  : 'http://localhost:8088')
-
-const BACKEND_PUBLIC = process.env.NEXT_PUBLIC_MEDIA_URL || (IS_PRODUCTION
-  ? 'https://modest-integral-ibex.ngrok-free.app'
-  : 'http://localhost:8088')
+  : 'http://localhost:8088'
 
 const nextConfig = {
   output: 'standalone',
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
+  eslint: { ignoreDuringBuilds: true },
   images: { unoptimized: true },
-
   experimental: {
-    serverActions: {
-      bodySizeLimit: '25mb'
-    }
+    serverActions: { bodySizeLimit: '25mb' }
   },
-
   env: {
-    NEXT_PUBLIC_MEDIA_URL: BACKEND_PUBLIC,
-    NEXT_PUBLIC_API_URL:   BACKEND_INTERNAL,
+    NEXT_PUBLIC_MEDIA_URL: IS_PRODUCTION
+      ? 'https://modest-integral-ibex.ngrok-free.app'
+      : 'http://localhost:8088',
   },
-
   async rewrites() {
-    console.log(`🔗 API routing to: ${BACKEND_INTERNAL}`)
+    console.log(`🔗 API routing to: ${BACKEND_URL}`)
     return [
-      // Actuator — backend exposes at /actuator/ directly
       {
         source: '/api/actuator/:path*',
-        destination: `${BACKEND_INTERNAL}/actuator/:path*`
+        destination: `${BACKEND_URL}/actuator/:path*`
       },
-      // All other /api/* — backend also has /api/* so keep the prefix
       {
         source: '/api/:path*',
-        destination: `${BACKEND_INTERNAL}/api/:path*`
+        destination: `${BACKEND_URL}/api/:path*`
       },
-      // Uploads
       {
         source: '/uploads/:path*',
-        destination: `${BACKEND_INTERNAL}/uploads/:path*`
+        destination: `${BACKEND_URL}/uploads/:path*`
       },
     ]
   },
-
   async headers() {
     return [
       {
