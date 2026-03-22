@@ -112,4 +112,21 @@ profile: () =>
       tiktokLikesCount?: number;
       tiktokVideoCount?: number;
     }>('/v1/shared/profile/me'),
+
+
+    getTikTokVideos: () =>
+  api.get<{
+    videos: {
+      id: string
+      title: string
+      coverImageUrl: string
+      description: string
+      duration: number
+      likeCount: number
+      commentCount: number
+      shareCount: number
+      viewCount: number
+      createTime: number
+    }[]
+  }>('/v1/player/tiktok/videos'),
 };

@@ -1,10 +1,47 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
-import { Users, Heart, Video, UserCheck, ExternalLink, BadgeCheck, Loader2 } from 'lucide-react'
+import { authApi } from '@/lib/api/auth'
+import {
+  Users, Heart, Video, UserCheck,
+  ExternalLink, BadgeCheck, Loader2,
+  Eye, MessageCircle, Share2
+} from 'lucide-react'
+
+interface TikTokVideo {
+  id: string
+  title: string
+  coverImageUrl: string
+  description: string
+  duration: number
+  likeCount: number
+  commentCount: number
+  shareCount: number
+  viewCount: number
+  createTime: number
+}
 
 export default function PlayerDashboard() {
   const { user, isLoading } = useAuthStore()
+  const [videos, setVideos] = useState<TikTokVideo[]>([])
+  const [videosLoading, setVideosLoading] = useState(true)
+  const [videosError, setVideosError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await authApi.getTikTokVideos()
+        setVideos(response.data.videos)
+      } catch (err: any) {
+        setVideosError('Failed to load videos')
+        console.error('Video fetch error:', err)
+      } finally {
+        setVideosLoading(false)
+      }
+    }
+    fetchVideos()
+  }, [])
 
   if (isLoading) {
     return (
@@ -91,16 +128,10 @@ export default function PlayerDashboard() {
           <div className="absolute -inset-0.5 bg-gradient-to-r from-[#ff6b35]/30 to-transparent rounded-2xl blur-sm" />
           <div className="relative bg-[#0d0d14] border border-[#ff6b35]/20 rounded-2xl p-6">
             <div className="flex items-center gap-5">
-
-              {/* Avatar */}
               <div className="relative flex-shrink-0">
                 <div className="w-20 h-20 rounded-2xl border-2 border-[#ff6b35]/50 overflow-hidden bg-[#1a1a24]">
                   {user?.avatarUrl ? (
-                    <img
-                      src={user.avatarUrl}
-                      alt="TikTok avatar"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={user.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-3xl font-black text-[#ff6b35]">
                       {(user?.displayName || user?.firstname || 'U')[0].toUpperCase()}
@@ -110,7 +141,6 @@ export default function PlayerDashboard() {
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#0d0d14]" />
               </div>
 
-              {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-xl font-black text-white truncate">
@@ -120,15 +150,11 @@ export default function PlayerDashboard() {
                     <BadgeCheck className="w-5 h-5 text-blue-400 flex-shrink-0" />
                   )}
                 </div>
-
                 {user?.tiktokBio && (
-                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">
-                    {user.tiktokBio}
-                  </p>
+                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{user.tiktokBio}</p>
                 )}
-
                 {user?.tiktokProfileLink && (
-                  <a  // ✅ Fixed: was missing the opening <a tag
+                  <a  // ✅ Fixed: missing opening <a tag
                     href={user.tiktokProfileLink}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -140,7 +166,6 @@ export default function PlayerDashboard() {
                 )}
               </div>
 
-              {/* Connected badge */}
               {user?.tiktokConnected && (
                 <div className="flex-shrink-0 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-bold">
                   ✓ Connected
@@ -155,10 +180,8 @@ export default function PlayerDashboard() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className={`bg-[#0d0d14] border ${stat.border} rounded-2xl p-5 hover:border-opacity-60 transition-all`}
-              style={{
-                background: `radial-gradient(circle at top right, ${stat.glow} 0%, #0d0d14 70%)`,
-              }}
+              className={`bg-[#0d0d14] border ${stat.border} rounded-2xl p-5 transition-all`}
+              style={{ background: `radial-gradient(circle at top right, ${stat.glow} 0%, #0d0d14 70%)` }}
             >
               <stat.icon className={`w-5 h-5 ${stat.color} mb-3`} />
               <div className={`text-3xl font-black ${stat.color}`}>{stat.value}</div>
@@ -171,39 +194,96 @@ export default function PlayerDashboard() {
         {user?.tiktokFollowerCount && user.tiktokFollowerCount > 0 && user?.tiktokLikesCount ? (
           <div className="bg-[#0d0d14] border border-[#ff6b35]/10 rounded-2xl p-6 mb-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-gray-300">
-                Avg Likes per Follower
-              </span>
+              <span className="text-sm font-semibold text-gray-300">Avg Likes per Follower</span>
               <span className="text-[#ff6b35] font-bold text-lg">
                 {(user.tiktokLikesCount / user.tiktokFollowerCount).toFixed(1)}x
               </span>
             </div>
             <div className="w-full bg-[#1a1a24] rounded-full h-3">
               <div
-                className="bg-gradient-to-r from-[#ff6b35] to-[#ff0000] h-3 rounded-full transition-all"
+                className="bg-gradient-to-r from-[#ff6b35] to-[#ff0000] h-3 rounded-full"
                 style={{
                   width: `${Math.min(100, (user.tiktokLikesCount / user.tiktokFollowerCount / 10) * 100)}%`,
                 }}
               />
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Based on total likes vs total followers
-            </p>
           </div>
         ) : null}
 
-        {/* Coming Soon — Videos */}
-        <div className="bg-[#0d0d14] border border-[#ff6b35]/10 rounded-2xl p-12 text-center">
-          <Video className="w-16 h-16 text-[#ff6b35]/30 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-gray-400 mb-2">Video Analytics</h3>
-          <p className="text-gray-600 text-sm">
-            Your TikTok videos and performance stats will appear here
-          </p>
-          <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff6b35]/10 border border-[#ff6b35]/20 text-[#ff6b35] text-xs font-bold">
-            Coming Soon
-          </div>
+        {/* Videos Section */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-black text-white">MY VIDEOS</h2>
+          <span className="text-xs text-gray-500">{videos.length} loaded</span>
         </div>
 
+        {videosLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin text-[#ff6b35]" />
+          </div>
+        ) : videosError ? (
+          <div className="bg-[#0d0d14] border border-red-500/20 rounded-2xl p-8 text-center">
+            <p className="text-red-400 text-sm">{videosError}</p>
+          </div>
+        ) : videos.length === 0 ? (
+          <div className="bg-[#0d0d14] border border-[#ff6b35]/10 rounded-2xl p-12 text-center">
+            <Video className="w-16 h-16 text-[#ff6b35]/30 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-400 mb-2">No Videos Found</h3>
+            <p className="text-gray-600 text-sm">Your TikTok videos will appear here</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {videos.map((video) => (
+              <div
+                key={video.id}
+                className="bg-[#0d0d14] border border-[#ff6b35]/10 rounded-2xl overflow-hidden hover:border-[#ff6b35]/40 transition-all group"
+              >
+                {/* Thumbnail */}
+                <div className="relative aspect-[9/16] bg-[#1a1a24]">
+                  {video.coverImageUrl ? (
+                    <img
+                      src={video.coverImageUrl}
+                      alt={video.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Video className="w-8 h-8 text-[#ff6b35]/30" />
+                    </div>
+                  )}
+                  {/* Duration badge */}
+                  <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
+                    {formatDuration(video.duration)}
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="p-3">
+                  <p className="text-xs text-gray-400 mb-2 line-clamp-2">
+                    {video.description || video.title || 'No description'}
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {formatNumber(video.viewCount)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-3 h-3" />
+                      {formatNumber(video.likeCount)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MessageCircle className="w-3 h-3" />
+                      {formatNumber(video.commentCount)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Share2 className="w-3 h-3" />
+                      {formatNumber(video.shareCount)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -214,4 +294,11 @@ function formatNumber(n?: number | null): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
   if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K'
   return n.toString()
+}
+
+function formatDuration(seconds: number): string {
+  if (!seconds) return '0:00'
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${m}:${s.toString().padStart(2, '0')}`
 }
