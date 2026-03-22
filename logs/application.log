@@ -3882,3 +3882,191 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Column 'country' c
 2026-03-22 13:20:55 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
 2026-03-22 13:20:55 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorization Header Present: false
 2026-03-22 13:20:55 [http-nio-8088-exec-8] WARN  c.example.security.config.JwtAuthenticationFilter - ?? NO TOKEN FOUND - Neither in cookie nor Authorization header
+2026-03-22 13:30:30 [http-nio-8088-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/player/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/shared/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/player/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/shared/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/player/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/shared/profile/me
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:30:30 [http-nio-8088-exec-1] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorization Header Present: false
+2026-03-22 13:30:30 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorization Header Present: false
+2026-03-22 13:30:30 [http-nio-8088-exec-1] WARN  c.example.security.config.JwtAuthenticationFilter - ?? NO TOKEN FOUND - Neither in cookie nor Authorization header
+2026-03-22 13:30:30 [http-nio-8088-exec-6] WARN  c.example.security.config.JwtAuthenticationFilter - ?? NO TOKEN FOUND - Neither in cookie nor Authorization header
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing POST /api/v1/auth/refresh
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: POST /api/v1/auth/refresh
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/auth/refresh
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.config.JwtAuthenticationFilter - ? PUBLIC PATH - Skipping JWT validation for: /api/v1/auth/refresh
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured POST /api/v1/auth/refresh
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG c.e.security.config.ratelimit.RateLimitInterceptor - ? Request allowed for user/IP: 0:0:0:0:0:0:0:1 (count: 1)
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - === REFRESH TOKEN REQUEST ===
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - === COOKIES RECEIVED ===
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - Cookie found: __vercel_toolbar = 1...
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - Cookie found: ajs_anonymous_id = df7ec1ed-3...
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - Cookie found: abuse_interstitial = modest-int...
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - Cookie found: refreshToken = eyJhbGciOi...
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - cookieRefreshToken present: true
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.e.s.auth.Authentication.AuthenticationService - Refresh token request received
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG com.example.security.config.JwtService - ? Validating refresh token for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  com.example.security.config.JwtService - ? Generating token pair for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG com.example.security.config.JwtService - ? Built claims for user tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder: roles=[PLAYER], userId=1
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  com.example.security.config.JwtService - ? Token pair generated successfully
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG c.e.s.auth.Authentication.AuthenticationService - Refresh token saved for user: 1
+2026-03-22 13:30:31 [http-nio-8088-exec-5] DEBUG c.e.s.auth.Authentication.AuthenticationService - Auth cookies set
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.e.s.auth.Authentication.AuthenticationService - ? Token refresh successful for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:31 [http-nio-8088-exec-5] INFO  c.example.security.auth.AuthenticationController - === REFRESH TOKEN COMPLETE ===
+2026-03-22 13:30:32 [http-nio-8088-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/player/profile/me
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/player/profile/me
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/player/profile/me
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token found in COOKIE
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Extracted: eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlb...
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Length: 339 characters
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 1: Extracting username from JWT
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username extracted: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 2: Loading UserDetails for: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails loaded successfully
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails Authorities: [ROLE_PLAYER]
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 3: Validating token structure and expiration
+2026-03-22 13:30:32 [http-nio-8088-exec-9] DEBUG com.example.security.config.JwtService - ? Validating access token for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Token validation passed
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 4: Extracting roles from JWT
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Roles: [PLAYER]
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 5: Validating JWT roles against UserDetails
+2026-03-22 13:30:32 [http-nio-8088-exec-9] DEBUG c.example.security.config.JwtAuthenticationFilter - ? Validating JWT roles
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Role validation passed
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Granted Authorities created: [PLAYER]
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 6: Checking route authorization
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Route authorization passed
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 7: Creating Authentication Token
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ??? AUTHENTICATION SUCCESSFUL ???
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? User: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorities: [PLAYER]
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ?? Accessing: GET /api/v1/player/profile/me
+2026-03-22 13:30:32 [http-nio-8088-exec-9] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:32 [http-nio-8088-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /api/v1/player/profile/me
+2026-03-22 13:30:32 [http-nio-8088-exec-9] DEBUG c.e.security.config.ratelimit.RateLimitInterceptor - ? Request allowed for user/IP: 1 (count: 1)
+2026-03-22 13:30:33 [http-nio-8088-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/shared/profile/me
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/shared/profile/me
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/shared/profile/me
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token found in COOKIE
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Extracted: eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlb...
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Length: 339 characters
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 1: Extracting username from JWT
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username extracted: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 2: Loading UserDetails for: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails loaded successfully
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails Authorities: [ROLE_PLAYER]
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 3: Validating token structure and expiration
+2026-03-22 13:30:33 [http-nio-8088-exec-10] DEBUG com.example.security.config.JwtService - ? Validating access token for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Token validation passed
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 4: Extracting roles from JWT
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Roles: [PLAYER]
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 5: Validating JWT roles against UserDetails
+2026-03-22 13:30:33 [http-nio-8088-exec-10] DEBUG c.example.security.config.JwtAuthenticationFilter - ? Validating JWT roles
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Role validation passed
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Granted Authorities created: [PLAYER]
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 6: Checking route authorization
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Route authorization passed
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 7: Creating Authentication Token
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ??? AUTHENTICATION SUCCESSFUL ???
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? User: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorities: [PLAYER]
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ?? Accessing: GET /api/v1/shared/profile/me
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:30:33 [http-nio-8088-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /api/v1/shared/profile/me
+2026-03-22 13:30:33 [http-nio-8088-exec-10] DEBUG c.e.security.config.ratelimit.RateLimitInterceptor - ? Request allowed for user/IP: 1 (count: 2)
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileController - === GET CURRENT USER PROFILE ===
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileController - Authenticated user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileService - Fetching profile for email: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileService - User found - ID: 1, Role: PLAYER, Status: ACTIVE
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileController - Profile retrieved successfully for: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:30:33 [http-nio-8088-exec-10] INFO  com.example.security.shared.UserProfileController - === PROFILE REQUEST COMPLETE ===
+2026-03-22 13:51:05 [http-nio-8088-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/shared/profile/me
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/shared/profile/me
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/shared/profile/me
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:51:05 [http-nio-8088-exec-8] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorization Header Present: false
+2026-03-22 13:51:05 [http-nio-8088-exec-8] WARN  c.example.security.config.JwtAuthenticationFilter - ?? NO TOKEN FOUND - Neither in cookie nor Authorization header
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing POST /api/v1/auth/refresh
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: POST /api/v1/auth/refresh
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/auth/refresh
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.config.JwtAuthenticationFilter - ? PUBLIC PATH - Skipping JWT validation for: /api/v1/auth/refresh
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured POST /api/v1/auth/refresh
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG c.e.security.config.ratelimit.RateLimitInterceptor - ? Request allowed for user/IP: 0:0:0:0:0:0:0:1 (count: 1)
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - === REFRESH TOKEN REQUEST ===
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - === COOKIES RECEIVED ===
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - Cookie found: __vercel_toolbar = 1...
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - Cookie found: ajs_anonymous_id = df7ec1ed-3...
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - Cookie found: abuse_interstitial = modest-int...
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - Cookie found: refreshToken = eyJhbGciOi...
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - cookieRefreshToken present: true
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.e.s.auth.Authentication.AuthenticationService - Refresh token request received
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG com.example.security.config.JwtService - ? Validating refresh token for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  com.example.security.config.JwtService - ? Generating token pair for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG com.example.security.config.JwtService - ? Built claims for user tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder: roles=[PLAYER], userId=1
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  com.example.security.config.JwtService - ? Token pair generated successfully
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG c.e.s.auth.Authentication.AuthenticationService - Refresh token saved for user: 1
+2026-03-22 13:51:07 [http-nio-8088-exec-2] DEBUG c.e.s.auth.Authentication.AuthenticationService - Auth cookies set
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.e.s.auth.Authentication.AuthenticationService - ? Token refresh successful for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:07 [http-nio-8088-exec-2] INFO  c.example.security.auth.AuthenticationController - === REFRESH TOKEN COMPLETE ===
+2026-03-22 13:51:08 [http-nio-8088-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /api/v1/shared/profile/me
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT FILTER - Incoming Request
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Path: GET /api/v1/shared/profile/me
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Full URI: /api/v1/shared/profile/me
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? PROTECTED PATH - JWT validation required
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token found in COOKIE
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Extracted: eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlb...
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Token Length: 339 characters
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 1: Extracting username from JWT
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username extracted: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 2: Loading UserDetails for: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails loaded successfully
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Username: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? UserDetails Authorities: [ROLE_PLAYER]
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 3: Validating token structure and expiration
+2026-03-22 13:51:08 [http-nio-8088-exec-6] DEBUG com.example.security.config.JwtService - ? Validating access token for user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Token validation passed
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 4: Extracting roles from JWT
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? JWT Roles: [PLAYER]
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 5: Validating JWT roles against UserDetails
+2026-03-22 13:51:08 [http-nio-8088-exec-6] DEBUG c.example.security.config.JwtAuthenticationFilter - ? Validating JWT roles
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Role validation passed
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Granted Authorities created: [PLAYER]
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 6: Checking route authorization
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Route authorization passed
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Step 7: Creating Authentication Token
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ??? AUTHENTICATION SUCCESSFUL ???
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? User: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ? Authorities: [PLAYER]
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ?? Accessing: GET /api/v1/shared/profile/me
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  c.example.security.config.JwtAuthenticationFilter - ================================================================================
+2026-03-22 13:51:08 [http-nio-8088-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /api/v1/shared/profile/me
+2026-03-22 13:51:08 [http-nio-8088-exec-6] DEBUG c.e.security.config.ratelimit.RateLimitInterceptor - ? Request allowed for user/IP: 1 (count: 1)
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileController - === GET CURRENT USER PROFILE ===
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileController - Authenticated user: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileService - Fetching profile for email: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileService - User found - ID: 1, Role: PLAYER, Status: ACTIVE
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileController - Profile retrieved successfully for: tiktok_-0007Yx6W5SOv3WYIELtUl4GyWVlJMQiLqou@tiktok.placeholder
+2026-03-22 13:51:08 [http-nio-8088-exec-6] INFO  com.example.security.shared.UserProfileController - === PROFILE REQUEST COMPLETE ===

@@ -37,7 +37,7 @@ export const sidebarConfig: Record<string, SidebarRoute[]> = {
   
   // ✅ Keep ROLE_1 format (matches profile API response)
   PLAYER: [
-    { name: 'Dashboard', href: '/dashboard/role-1', icon: LayoutDashboard },
+    { name: 'Dashboard', href: '/dashboard/player', icon: LayoutDashboard },
     { name: 'Tasks', href: '/dashboard/role-1/tasks', icon: CheckSquare },
     { name: 'Projects', href: '/dashboard/role-1/projects', icon: Briefcase },
     { name: 'Reports', href: '/dashboard/role-1/reports', icon: FileText },
