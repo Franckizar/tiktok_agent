@@ -41,19 +41,19 @@ public class Player {
     // MANDATORY FIELDS
     // ========================================
 
-    @Column(unique = true, nullable = false)
+    // @Column(unique = true, nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private String platform;        // PC, PlayStation, Xbox, Mobile
 
-    @Column(name = "main_game", nullable = false)
+    // @Column(name = "main_game", nullable = false)
     private String mainGame;        // Will be replaced by Game entity later
 
-    @Column(name = "skill_level", nullable = false)
+    // @Column(name = "skill_level", nullable = false)
     private String skillLevel;      // BEGINNER, INTERMEDIATE, ADVANCED, PRO
 
     // ========================================

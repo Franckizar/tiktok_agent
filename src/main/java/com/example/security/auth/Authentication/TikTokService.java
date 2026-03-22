@@ -4,6 +4,7 @@ import com.example.security.UserRepository;
 import com.example.security.Users.Role;
 import com.example.security.Users.User;
 import com.example.security.Users.UserStatus;
+import com.example.security.Users.Player.PlayerService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TikTokService {
 
     private final UserRepository userRepository;
+    private final PlayerService playerService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, String> pkceStorage = new ConcurrentHashMap<>();
@@ -68,7 +70,7 @@ public class TikTokService {
 
             String authUrl = UriComponentsBuilder.fromUriString(AUTH_URL)
                     .queryParam("client_key", clientId)
-                    .queryParam("scope", "user.info.basic")
+                    .queryParam("scope", "user.info.basic,user.info.profile,user.info.stats,video.list")
                     .queryParam("response_type", "code")
                     .queryParam("redirect_uri", redirectUri)
                     .queryParam("state", state)
@@ -177,7 +179,7 @@ public class TikTokService {
             headers.set("Authorization", "Bearer " + accessToken);
 
             String url = UriComponentsBuilder.fromUriString(USER_INFO_URL)
-                    .queryParam("fields", "open_id,union_id,avatar_url,display_name")
+                    .queryParam("fields", "open_id,union_id,avatar_url,display_name,bio_description,profile_web_link,is_verified,follower_count,following_count,likes_count,video_count")
                     .build()
                     .toUriString();
 
@@ -209,8 +211,7 @@ public class TikTokService {
 
     // ========================================
     // CREATE OR UPDATE TIKTOK USER
-    // ========================================
-   private User createOrUpdateTikTokUser(JsonNode userInfo, TokenResponse tokenResponse) {
+ private User createOrUpdateTikTokUser(JsonNode userInfo, TokenResponse tokenResponse) {
     String tiktokId = userInfo.get("open_id").asText();
 
     String displayName = userInfo.has("display_name") ?
@@ -222,14 +223,36 @@ public class TikTokService {
     String unionId = userInfo.has("union_id") ?
             userInfo.get("union_id").asText() : null;
 
-    // Generate placeholder email since TikTok doesn't provide one
+    String bio = userInfo.has("bio_description") ?
+            userInfo.get("bio_description").asText() : null;
+
+    String profileLink = userInfo.has("profile_web_link") ?
+            userInfo.get("profile_web_link").asText() : null;
+
+    boolean isVerified = userInfo.has("is_verified") &&
+            userInfo.get("is_verified").asBoolean();
+
+    Long followerCount = userInfo.has("follower_count") ?
+            userInfo.get("follower_count").asLong() : 0L;
+
+    Long followingCount = userInfo.has("following_count") ?
+            userInfo.get("following_count").asLong() : 0L;
+
+    Long likesCount = userInfo.has("likes_count") ?
+            userInfo.get("likes_count").asLong() : 0L;
+
+    Long videoCount = userInfo.has("video_count") ?
+            userInfo.get("video_count").asLong() : 0L;
+
     String placeholderEmail = "tiktok_" + tiktokId + "@tiktok.placeholder";
 
     Optional<User> existing = userRepository.findByTiktokId(tiktokId);
 
     User user;
     if (existing.isPresent()) {
+        // ========================================
         // UPDATE existing user
+        // ========================================
         user = existing.get();
         user.setTiktokId(tiktokId);
         user.setTiktokAccessToken(tokenResponse.accessToken());
@@ -239,14 +262,26 @@ public class TikTokService {
         user.setDisplayName(displayName);
         user.setAvatarUrl(avatarUrl);
         user.setUnionId(unionId);
-        log.info("🔄 Existing TikTok user updated: {} | avatar: {}",
-                displayName, avatarUrl != null ? "✅" : "❌");
+        user.setTiktokBio(bio);
+        user.setTiktokProfileLink(profileLink);
+        user.setTiktokVerified(isVerified);
+        user.setTiktokFollowerCount(followerCount);
+        user.setTiktokFollowingCount(followingCount);
+        user.setTiktokLikesCount(likesCount);
+        user.setTiktokVideoCount(videoCount);
+        log.info("🔄 Existing TikTok user updated: {} | followers: {}",
+                displayName, followerCount);
+
+        return userRepository.save(user);
+
     } else {
-        // CREATE new user using template builder
+        // ========================================
+        // CREATE new user
+        // ========================================
         user = User.builder()
                 .firstname(displayName != null ? displayName : "tiktok_" + tiktokId.substring(0, 8))
                 .lastname("")
-                .email(placeholderEmail)  // ← fixed
+                .email(placeholderEmail)
                 .tiktokId(tiktokId)
                 .tiktokAccessToken(tokenResponse.accessToken())
                 .tiktokRefreshToken(tokenResponse.refreshToken())
@@ -256,16 +291,31 @@ public class TikTokService {
                 .avatarUrl(avatarUrl)
                 .unionId(unionId)
                 .status(UserStatus.ACTIVE)
-                // .defaultRole(Role.UNREG)
                 .defaultRole(Role.PLAYER)
                 .tokenVersion(0)
                 .build();
-        user.addRole(Role.PLAYER);
-        log.info("🆕 New TikTok user created: {} | email: {} | avatar: {}",
-                displayName, placeholderEmail, avatarUrl != null ? "✅" : "❌");
-    }
 
-    return userRepository.save(user);
+        // Set stats after build — cannot go inside builder
+        user.setTiktokBio(bio);
+        user.setTiktokProfileLink(profileLink);
+        user.setTiktokVerified(isVerified);
+        user.setTiktokFollowerCount(followerCount);
+        user.setTiktokFollowingCount(followingCount);
+        user.setTiktokLikesCount(likesCount);
+        user.setTiktokVideoCount(videoCount);
+
+        user.addRole(Role.PLAYER);
+
+        // Save user first to get ID
+        User savedUser = userRepository.save(user);
+
+        // Create player profile
+        playerService.create(savedUser.getId(), null);
+        log.info("🆕 New TikTok user created: {} | followers: {} | player profile created ✅",
+                displayName, followerCount);
+
+        return savedUser;
+    }
 }
 
 // ========================================

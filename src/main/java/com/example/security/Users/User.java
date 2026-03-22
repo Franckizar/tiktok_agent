@@ -165,4 +165,31 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+
+    // ========================================
+// TIKTOK STATS & PROFILE FIELDS
+// ========================================
+
+@Column(name = "tiktok_bio", length = 500)
+private String tiktokBio;
+
+@Column(name = "tiktok_profile_link")
+private String tiktokProfileLink;
+
+@Builder.Default
+@Column(name = "tiktok_verified")
+private boolean tiktokVerified = false;
+
+@Column(name = "tiktok_follower_count")
+private Long tiktokFollowerCount;
+
+@Column(name = "tiktok_following_count")
+private Long tiktokFollowingCount;
+
+@Column(name = "tiktok_likes_count")
+private Long tiktokLikesCount;
+
+@Column(name = "tiktok_video_count")
+private Long tiktokVideoCount;
 }
