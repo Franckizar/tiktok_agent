@@ -87,7 +87,7 @@ export const authApi = {
   // USER PROFILE
   // ========================================
 
-  profile: () =>
+profile: () =>
     api.get<{
       id: number;
       email: string;
@@ -98,5 +98,18 @@ export const authApi = {
       logoPath?: string;
       hasPlayerProfile: boolean;
       hasSuperAdminProfile: boolean;
+      // TikTok profile
+      tiktokId?: string;
+      displayName?: string;
+      avatarUrl?: string;
+      tiktokBio?: string;
+      tiktokProfileLink?: string;
+      tiktokConnected?: boolean;
+      tiktokVerified?: boolean;
+      // TikTok stats
+      tiktokFollowerCount?: number;
+      tiktokFollowingCount?: number;
+      tiktokLikesCount?: number;
+      tiktokVideoCount?: number;
     }>('/v1/shared/profile/me'),
 };

@@ -48,7 +48,7 @@ public class UserProfileService {
     }
 
     // ========================================
-    // PRIVATE HELPER - Build response from User entity
+    // PRIVATE HELPER
     // ========================================
     private UserProfileResponse buildResponse(User user) {
         return UserProfileResponse.builder()
@@ -59,9 +59,22 @@ public class UserProfileService {
                 .role(user.getDefaultRole().name())
                 .status(user.getStatus().name())
                 .logoPath(user.getLogoPath())
-                // ✅ Profile flags - frontend uses these to decide which dashboard to load
+                // Profile flags
                 .hasPlayerProfile(user.getPlayerProfile() != null)
                 .hasSuperAdminProfile(user.getSuperAdminProfile() != null)
+                // TikTok profile
+                .tiktokId(user.getTiktokId())
+                .displayName(user.getDisplayName())
+                .avatarUrl(user.getAvatarUrl())
+                .tiktokBio(user.getTiktokBio())
+                .tiktokProfileLink(user.getTiktokProfileLink())
+                .tiktokConnected(user.isTiktokConnected())
+                .tiktokVerified(user.isTiktokVerified())
+                // TikTok stats
+                .tiktokFollowerCount(user.getTiktokFollowerCount())
+                .tiktokFollowingCount(user.getTiktokFollowingCount())
+                .tiktokLikesCount(user.getTiktokLikesCount())
+                .tiktokVideoCount(user.getTiktokVideoCount())
                 .build();
     }
 }

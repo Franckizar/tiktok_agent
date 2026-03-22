@@ -18,7 +18,26 @@ public class UserProfileResponse {
     private String status;
     private String logoPath;
 
-    // Profile flags - frontend uses these to know which dashboard to load
+    // Profile flags
     private boolean hasPlayerProfile;
     private boolean hasSuperAdminProfile;
+
+    // ========================================
+    // TIKTOK PROFILE FIELDS
+    // ========================================
+    private String tiktokId;
+    private String displayName;
+    private String avatarUrl;
+    private String tiktokBio;
+    private String tiktokProfileLink;
+    private boolean tiktokConnected;
+    private boolean tiktokVerified;
+
+    // ========================================
+    // TIKTOK STATS
+    // ========================================
+    private Long tiktokFollowerCount;
+    private Long tiktokFollowingCount;
+    private Long tiktokLikesCount;
+    private Long tiktokVideoCount;
 }
