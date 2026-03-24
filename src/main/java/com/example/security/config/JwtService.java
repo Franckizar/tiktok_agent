@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Key;
 import java.util.*;
@@ -264,4 +265,18 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+    // Add this import at the top
+
+
+// Add this method anywhere in JwtService
+public Long extractUserIdFromRequest(HttpServletRequest request) {
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        throw new RuntimeException("Missing or invalid Authorization header");
+    }
+    String token = authHeader.substring(7);
+    Integer userId = extractUserId(token); // already exists
+    if (userId == null) throw new RuntimeException("userId claim missing from token");
+    return userId.longValue();
+}
 }

@@ -51,4 +51,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByStatus(UserStatus status, Pageable pageable);
 
     List<User> findByStatus(UserStatus status);
+
+    List<User> findByTiktokConnectedTrue();
 }
